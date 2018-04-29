@@ -5,4 +5,4 @@ xcode_project: Screenshot-OCR.xcodeproj
 xcode_scheme: Screenshot-OCR
 script:
     - xcodebuild showsdks
-    - xcodebuild clean build -sdk macosx10.13 -workspace Screenshot-OCR.xcodeproj -scheme Screenshot-OCR CODE_SIGNING_REQUIRED=NO
+    - xcodebuild clean build -sdk macosx10.13 -project Screenshot-OCR.xcodeproj -scheme Screenshot-OCR CODE_SIGNING_REQUIRED=NO
