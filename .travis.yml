@@ -3,6 +3,5 @@ os: osx
 osx_image: xcode9.3
 xcode_project: Screenshot-OCR.xcodeproj
 xcode_scheme: Screenshot-OCR
-before_install:
-    - brew update
-    - brew outdated xctool || brew upgrade xctool
+script:
+    - xcodebuild clean build -sdk macosx10.4 -workspace Screenshot-OCR.xcworkspace -scheme Screenshot-OCR CODE_SIGNING_REQUIRED=NO
