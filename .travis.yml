@@ -4,5 +4,5 @@ osx_image: xcode9.3
 xcode_project: Screenshot-OCR.xcodeproj
 xcode_scheme: Screenshot-OCR
 script:
-    - xcodebuild showsdks
-    - xcodebuild clean build -sdk macosx10.13 -project Screenshot-OCR.xcodeproj -scheme Screenshot-OCR CODE_SIGNING_REQUIRED=NO
+    - xcodebuild -showsdks
+    - xcodebuild clean build -sdk macosx10.13 -project Screenshot-OCR.xcodeproj -scheme Screenshot-OCR CODE_SIGN_IDENTITY="Mac Developer: Liu Scott (38UYDV8QF2)" -configuration Debug
