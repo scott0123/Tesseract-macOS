@@ -10,21 +10,57 @@ Thus I have decided to create my own!
 
 ## Getting started
 
-## Example
+// TODO
+
+## Example usage
+
+At the top of the file include the header file
+
+```
+#import "SLTesseract.h"
+```
+
+And then
+
+```
+SLTesseract *ocr = [[SLTesseract alloc] init];
+```
+
+will initiallize the class SLTesseract. 
+
+(optional) `ocr.language = @"eng";`
+
+(optional) `ocr.charWhitelist = @"abcdefghijklmnopqrstuvwxyz"`
+
+(optional) `ocr.charBlacklist = @"1234567890"`
+
+Finally, assuming you already have the image that you wish to perform OCR on in NSImage form, you can call
+
+```
+NSString *text = [ocr recognize:image];
+```
+
+to recognize the image in question and get the corresponding text.
 
 ## Application
 
+// TODO
+
 ## Libraries used
-* Tesseract (v3.05.01)
-* Leptonica (v1.75.3)
+
+* [Tesseract](https://github.com/tesseract-ocr/tesseract) (v3.05.01)
+* [Leptonica](http://leptonica.org/) (v1.75.3)
 	* LibPNG (v1.6.34)
 	* LibTIFF (v4.0.9)
 	* LibJPEG (v9c)
 	* LibZ (v1.2.11)
 
 ## License
+
 My project *Tesseract macOS* itself is distributed under the MIT license (see LICENSE);
 
 Keep in mind that the main dependency *Tesseract* is distributed under the Apache 2.0 license.
+
 ## Contact
+
 You may reach me at `Tesseract-macOS@scott-liu.com` to inquire about this project.
