@@ -10,10 +10,15 @@
 
 @interface SLScreenshot : NSObject
 
-+ (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
-+ (NSImage *)ScreenshotToNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
-+ (NSImage *)ScreenshotTo300dpiNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
-+ (NSImage *)ScreenshotTo300dpiNSImageSetBlackTo:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
-+ (NSImage *)ScreenshotTo300dpiNSImageOnlyKeep:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+// easy to use
+- (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock;
+
+
+// more difficult to use
+- (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+- (NSImage *)ScreenshotToNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+- (NSImage *)ScreenshotTo300dpiNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+- (NSImage *)ScreenshotTo300dpiNSImageSetBlackTo:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+- (NSImage *)ScreenshotTo300dpiNSImageOnlyKeep:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
 
 @end

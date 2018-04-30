@@ -33,6 +33,9 @@
 }
 
 
+/*
+ *  Used to Acquire accessibility privileges because SLScreenshot needs to take mouse control
+ */
 - (BOOL)acquirePrivileges {
     
     if (&AXIsProcessTrustedWithOptions != NULL) {

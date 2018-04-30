@@ -7,11 +7,53 @@
 //
 
 #import <AppKit/AppKit.h> // needed for NSBitmapImageRep
+#import <QuartzCore/QuartzCore.h> // needed for CAShapeLayer
 #import "SLScreenshot.h"
+
+@interface SLScreenshot ()
+
+@property (nonatomic, strong) CAShapeLayer *shapeLayer;
+
+@end
 
 @implementation SLScreenshot
 
-+ (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+id current_instance;
+int screen_height;
+/*
+ *  0: not screenshotting
+ *  1: ss phase one, picking the upper left point
+ *  2: ss phase two, picking the lower right point
+ */
+int ss_phase;
+
+NSPoint ss_ul; // screenshot upperleft
+NSPoint ss_lr; // screenshot lowerright
+void (^localCompletionBlock)(NSImage* image);
+
+- (instancetype)init{
+    self = [super init];
+    
+    current_instance = self;
+    screen_height = [NSScreen mainScreen].frame.size.height;
+    ss_phase = 0;
+    ss_ul = NSMakePoint(0, 0);
+    ss_lr = NSMakePoint(0, 0);
+    localCompletionBlock = nil;
+    
+    CreateEventTap();
+    
+    return self;
+}
+
+
+- (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock{
+    
+    ss_phase = 1;
+    localCompletionBlock = completionBlock;
+}
+
+- (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     // create a CGRect of custom size from bottom-left to top-right
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
@@ -47,7 +89,7 @@
     
 }
 
-+ (NSImage *)ScreenshotToNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+- (NSImage *)ScreenshotToNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     // create a CGRect of custom size from bottom-left to top-right
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
@@ -64,7 +106,7 @@
     return im;
 }
 
-+ (NSImage *)ScreenshotTo300dpiNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+- (NSImage *)ScreenshotTo300dpiNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     // create a CGRect of custom size from bottom-left to top-right
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
@@ -96,7 +138,7 @@
     return im;
 }
 
-+ (NSImage *)ScreenshotTo300dpiNSImageSetBlackTo:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+- (NSImage *)ScreenshotTo300dpiNSImageSetBlackTo:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     // create a CGRect of custom size from bottom-left to top-right
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
@@ -147,7 +189,7 @@
     return im;
 }
 
-+ (NSImage *)ScreenshotTo300dpiNSImageOnlyKeep:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+- (NSImage *)ScreenshotTo300dpiNSImageOnlyKeep:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     
     float threshold = 0.01; // = 2.55
     
@@ -203,6 +245,127 @@
     NSString *filePath = [[fileName stringByExpandingTildeInPath] stringByStandardizingPath];
     [data writeToFile:filePath atomically: YES];
     return im;
+}
+- (void)mouseMoved {
+    // nothing at the moment
+}
+- (void)mouseDown {
+    
+    // switch on ss_phase
+    switch (ss_phase) {
+        case 1:
+            ss_ul = [self getMouseCoordinates];
+            ss_phase += 1;
+            break;
+            
+        default:
+            break;
+    }
+}
+- (void)mouseUp {
+    
+    // switch on ss_phase
+    switch (ss_phase) {
+            
+        case 2:
+            ss_lr = [self getMouseCoordinates];
+            ss_phase = 0;
+            
+            if(localCompletionBlock != nil){
+                NSColor *yellow = [NSColor colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f];
+                NSColor *cyan = [NSColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f];
+                NSColor *blue = [NSColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f];
+                //NSImage *ss = [self ScreenshotTo300dpiNSImageOnlyKeep:yellow FromUpperLeft:ss_ul ToLowerRight:ss_lr];
+                localCompletionBlock([self ScreenshotTo300dpiNSImageFromUpperLeft:ss_ul ToLowerRight:ss_lr]);
+                localCompletionBlock = nil;
+            }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+// ------------------------------ event taps ------------------------------
+void CreateEventTap() {
+    
+    // kCGHIDEventTap = system-wide tap
+    // kCGSessionEventTap = session-wide tap
+    // kCGAnnotatedSessionEventTap = application-wide tap
+    CGEventTapLocation tap = kCGHIDEventTap;
+    // place the tap at the very beginning
+    CGEventTapPlacement place = kCGHeadInsertEventTap;
+    // this will not be a listen-only tap
+    CGEventTapOptions options = kCGEventTapOptionDefault;
+    // OR the masks together
+    CGEventMask eventsOfInterestMouseMoved = CGEventMaskBit(kCGEventMouseMoved)
+    | CGEventMaskBit(kCGEventLeftMouseDragged);
+    CGEventMask eventsOfInterestMouseDown = CGEventMaskBit(kCGEventLeftMouseDown);
+    CGEventMask eventsOfInterestMouseUp = CGEventMaskBit(kCGEventLeftMouseUp);
+    
+    // create the event tap for mouse moves
+    CFMachPortRef mouseMovedEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseMoved, mouseMovedCallback, nil);
+    // create the event tap for mouse downs
+    CFMachPortRef mouseDownEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseDown, mouseDownCallback, nil);
+    // create the event tap for mouse ups
+    CFMachPortRef mouseUpEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseUp, mouseUpCallback, nil);
+    
+    // ---------- YOU WILL HAVE A EXC_BAD_ACCESS FAULT HERE IF APP SANDBOX ISNT OFF ----------
+    
+    // create a run loop source ref for mouse moves
+    CFRunLoopSourceRef mouseMovedRunLoopSourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mouseMovedEventTap, 0);
+    // create a run loop source ref for mouse downs
+    CFRunLoopSourceRef mouseDownRunLoopSourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mouseDownEventTap, 0);
+    // create a run loop source ref for mouse downs
+    CFRunLoopSourceRef mouseUpRunLoopSourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mouseUpEventTap, 0);
+    
+    // add to the run loops
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), mouseMovedRunLoopSourceRef, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), mouseDownRunLoopSourceRef, kCFRunLoopCommonModes);
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), mouseUpRunLoopSourceRef, kCFRunLoopCommonModes);
+    
+    // Enable the event tap
+    CGEventTapEnable(mouseMovedEventTap, true);
+    CGEventTapEnable(mouseDownEventTap, true);
+    CGEventTapEnable(mouseUpEventTap, true);
+}
+
+CGEventRef mouseMovedCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+    
+    [current_instance mouseMoved];
+    return event;
+}
+
+CGEventRef mouseDownCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+    
+    int ss_busy = 0;
+    if(ss_phase != 0) ss_busy = 1;
+    
+    [current_instance mouseDown];
+    
+    if(ss_busy == 1) return nil;
+    
+    return event;
+}
+
+CGEventRef mouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+    
+    int ss_busy = 0;
+    if(ss_phase != 0) ss_busy = 1;
+    
+    [current_instance mouseUp];
+    
+    if(ss_busy == 1) return nil;
+    
+    return event;
+}
+
+
+/* This function ensures that (0, 0) is the top left of the screen
+ */
+- (NSPoint)getMouseCoordinates {
+    NSPoint mouseCoordInvertedY = [NSEvent mouseLocation];
+    return NSMakePoint(mouseCoordInvertedY.x, screen_height - mouseCoordInvertedY.y);
 }
 
 @end
