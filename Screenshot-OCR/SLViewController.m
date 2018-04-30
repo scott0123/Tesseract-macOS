@@ -32,6 +32,7 @@ SLTesseract *ocr;
 
 - (IBAction)ButtonPressed:(NSButton *)sender {
     
+    
     SLScreenshot *shooter = [[SLScreenshot alloc] init];
     [shooter TakeScreenshot:^(NSImage* ss){
         [self.ssImageView setImage:ss];

@@ -11,11 +11,11 @@
 @interface SLScreenshot : NSObject
 
 // easy to use
-- (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock;
+- (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock; // returns the screenshot in the completion block
 
 
 // more difficult to use
-- (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
+- (void)saveScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr; // saves to desktop
 - (NSImage *)ScreenshotToNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
 - (NSImage *)ScreenshotTo300dpiNSImageFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;
 - (NSImage *)ScreenshotTo300dpiNSImageSetBlackTo:(NSColor*)color FromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr;

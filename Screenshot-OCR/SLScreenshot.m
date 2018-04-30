@@ -12,6 +12,7 @@
 
 @interface SLScreenshot ()
 
+@property (nonatomic, strong) NSWindow *invisibleWindow;
 @property (nonatomic, strong) CAShapeLayer *shapeLayer;
 
 @end
@@ -20,6 +21,7 @@
 
 id current_instance;
 int screen_height;
+int screen_width;
 /*
  *  0: not screenshotting
  *  1: ss phase one, picking the upper left point
@@ -36,6 +38,7 @@ void (^localCompletionBlock)(NSImage* image);
     
     current_instance = self;
     screen_height = [NSScreen mainScreen].frame.size.height;
+    screen_width = [NSScreen mainScreen].frame.size.width;
     ss_phase = 0;
     ss_ul = NSMakePoint(0, 0);
     ss_lr = NSMakePoint(0, 0);
@@ -53,7 +56,7 @@ void (^localCompletionBlock)(NSImage* image);
     localCompletionBlock = completionBlock;
 }
 
-- (void)takeScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
+- (void)saveScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr {
     // create a CGRect of custom size from bottom-left to top-right
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
@@ -246,44 +249,123 @@ void (^localCompletionBlock)(NSImage* image);
     [data writeToFile:filePath atomically: YES];
     return im;
 }
-- (void)mouseMoved {
-    // nothing at the moment
-}
+
 - (void)mouseDown {
     
-    // switch on ss_phase
-    switch (ss_phase) {
-        case 1:
-            ss_ul = [self getMouseCoordinates];
-            ss_phase += 1;
-            break;
+    // based on ss_phase
+    if (ss_phase == 1) {
+        ss_ul = [self getMouseCoordinates];
+        ss_lr = [self getMouseCoordinates];
+        ss_phase += 1;
+        
+        bool windowNotNil = true;
+        
+        // display graphics if main window isnt nil
+        if([[NSApplication sharedApplication] windows][0] == nil){
+            windowNotNil = false;
+        }
+        // display the search region in blue
+        if(windowNotNil){
+            NSRect searchRect = NSMakeRect(ss_ul.x, screen_height - ss_lr.y, ss_lr.x-ss_ul.x, ss_lr.y-ss_ul.y);
+            searchRect = NSMakeRect(0, 0, screen_width, screen_height);
+            self.invisibleWindow = [[NSWindow alloc]initWithContentRect:searchRect
+                                                      styleMask:NSWindowStyleMaskBorderless
+                                                        backing:NSBackingStoreBuffered
+                                                          defer:NO];
+            NSColor* transBlue = [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0.0];
+            self.invisibleWindow.backgroundColor = transBlue;
+            [self.invisibleWindow setOpaque:NO];
+            [self.invisibleWindow setIgnoresMouseEvents:YES];
+            [[[NSApplication sharedApplication] windows][0] addChildWindow:self.invisibleWindow ordered:NSWindowAbove];
             
-        default:
-            break;
+            // Courtesy of https://stackoverflow.com/a/20359552
+            // create and configure shape layer
+            self.shapeLayer = [CAShapeLayer layer];
+            self.shapeLayer.lineWidth = 1.0;
+            self.shapeLayer.strokeColor = [[NSColor blackColor] CGColor];
+            self.shapeLayer.fillColor = [[NSColor clearColor] CGColor];
+            self.shapeLayer.lineDashPattern = @[@10, @5];
+            [self.invisibleWindow.contentView setWantsLayer:YES];
+            [self.invisibleWindow.contentView.layer addSublayer:self.shapeLayer];
+            
+            // create animation for the layer
+            CABasicAnimation *dashAnimation;
+            dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
+            [dashAnimation setFromValue:@0.0f];
+            [dashAnimation setToValue:@15.0f];
+            [dashAnimation setDuration:0.75f];
+            [dashAnimation setRepeatCount:HUGE_VALF];
+            [self.shapeLayer addAnimation:dashAnimation forKey:@"linePhase"];
+        }
+    }
+}
+- (void)mouseMoved {
+    // based on ss_phase
+    if (ss_phase == 2) {
+        ss_lr = [self getMouseCoordinates];
+        
+        bool windowNotNil = true;
+        
+        // display graphics if main window isnt nil
+        if([[NSApplication sharedApplication] windows][0] == nil){
+            windowNotNil = false;
+        }
+        // display the search region in blue
+        if(windowNotNil){
+            //NSRect searchRect = NSMakeRect(ss_ul.x, screen_height - ss_lr.y, ss_lr.x-ss_ul.x, ss_lr.y-ss_ul.y);
+            //[self.invisibleWindow setFrame:searchRect display:NO];
+            //printf("(%f, %f)\n", searchRect.origin.x, searchRect.origin.y + searchRect.size.height);
+            //[self.invisibleWindow setContentSize:NSMakeSize(ss_lr.x-ss_ul.x,-ss_lr.y+ss_ul.y)];
+            
+            // create path for the shape layer
+            CGMutablePathRef path = CGPathCreateMutable();
+            CGPathMoveToPoint(path, NULL, ss_ul.x, screen_height - ss_ul.y);
+            CGPathAddLineToPoint(path, NULL, ss_ul.x, screen_height - ss_lr.y);
+            CGPathAddLineToPoint(path, NULL, ss_lr.x, screen_height - ss_lr.y);
+            CGPathAddLineToPoint(path, NULL, ss_lr.x, screen_height - ss_ul.y);
+            CGPathCloseSubpath(path);
+            
+            // set the shape layer's path
+            self.shapeLayer.path = path;
+            
+            CGPathRelease(path);
+        }
     }
 }
 - (void)mouseUp {
     
-    // switch on ss_phase
-    switch (ss_phase) {
-            
-        case 2:
-            ss_lr = [self getMouseCoordinates];
-            ss_phase = 0;
-            
-            if(localCompletionBlock != nil){
-                NSColor *yellow = [NSColor colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f];
-                NSColor *cyan = [NSColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f];
-                NSColor *blue = [NSColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f];
-                //NSImage *ss = [self ScreenshotTo300dpiNSImageOnlyKeep:yellow FromUpperLeft:ss_ul ToLowerRight:ss_lr];
-                localCompletionBlock([self ScreenshotTo300dpiNSImageFromUpperLeft:ss_ul ToLowerRight:ss_lr]);
-                localCompletionBlock = nil;
-            }
-            break;
-            
-        default:
-            break;
+    // based on ss_phase
+    if (ss_phase == 2) {
+        ss_lr = [self getMouseCoordinates];
+        ss_phase = 0;
+        
+        bool windowNotNil = true;
+        
+        // display graphics if main window isnt nil
+        if([[NSApplication sharedApplication] windows][0] == nil){
+            windowNotNil = false;
+        }
+         if(windowNotNil){
+             [self.shapeLayer removeFromSuperlayer];
+             self.shapeLayer = nil;
+             [self.invisibleWindow orderOut:self];
+         }
+        
+        if(localCompletionBlock != nil){
+            // we have to wait a tiny tiny bit because the shape-layer and window both take some time to exit
+            [self performSelector:@selector(completeCompletionBlock) withObject:nil afterDelay:0.01f];
+        }
     }
+}
+
+- (void)completeCompletionBlock{
+    
+    //NSColor *yellow = [NSColor colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f];
+    //NSColor *cyan = [NSColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f];
+    //NSColor *blue = [NSColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f];
+    //NSImage *ss = [self ScreenshotTo300dpiNSImageOnlyKeep:yellow FromUpperLeft:ss_ul ToLowerRight:ss_lr];
+    localCompletionBlock([self ScreenshotTo300dpiNSImageFromUpperLeft:ss_ul ToLowerRight:ss_lr]);
+    localCompletionBlock = nil;
 }
 
 // ------------------------------ event taps ------------------------------
