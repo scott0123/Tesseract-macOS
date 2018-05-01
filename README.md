@@ -6,14 +6,41 @@
 
 I have searched long and hard on the internet for a macOS based Objective-C wrapper for Tesseract to no avail.
 
-Thus I have decided to create my own!
+As a result, I have decided to create my own! Please star this repo if you find it helpful. :)
 
-## Getting started
+## Demo Application
 
-### Prerequisites
-// TODO
+For those of you who wish to first test out the OCR capabilities, I have created a demo application that lets you do just this.
 
-## Example usage
+First build the Xcode project included in this repository. This will generate an application through wish you can take a screenshot, as shown in the following gif.
+
+![Screenshot example](./demo_images/demo.gif)
+
+In the Xcode log you will find the corresponding text Tesseract detected for this screenshot.
+
+![Output text](./demo_images/output_text.png)
+
+## Getting Started
+
+### Getting this to work in your own project
+
+1. Clone this project
+2. Copy over the `include`, `lib`, and `tessdata` folders to your project.
+3. Add these folders to your project in Xcode. Make sure `include` and `lib` are added as *groups* and `tessdata` is added as a *folder reference*. 
+
+	The location of this setting is shown in the following image:
+
+	![add settings](./demo_images/add_settings.png)
+
+4. Copy over the files `SLTesseract.mm` and `SLTesseract.h` to your code directory.
+5. Verify that the file `SLTesseract.mm` is added to `Targets > Build Phases > Compile Sources`. Additionally, verify that all the static libraries are also added to `Targets > Build Phases > Link Binary With Libraries`. (This process should be done automatically)
+6. You are now ready to use Tesseract in your macOS project. (See Example Usage for code syntax)
+
+### Dependencies
+
+None so far.
+
+## Example Usage
 
 At the top of the file include the header file
 
@@ -43,19 +70,8 @@ NSString *text = [ocr recognize:image];
 
 to recognize the image in question and get the corresponding text.
 
-## Application
 
-I have included a sample application if one wishes to test out the OCR capabilities.
-
-First build the Xcode project included in this repository. This will generate an application through wish you can take a screenshot, as shown in the following gif.
-
-![Screenshot example](./demo_images/demo.gif)
-
-In the Xcode log you will find the corresponding text Tesseract detected for this screenshot.
-
-![Output text](./demo_images/output_text.png)
-
-## Libraries used
+## Libraries Used
 
 * [Tesseract](https://github.com/tesseract-ocr/tesseract) (v3.05.01)
 * [Leptonica](http://leptonica.org/) (v1.75.3)
