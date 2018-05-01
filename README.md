@@ -10,6 +10,7 @@ Thus I have decided to create my own!
 
 ## Getting started
 
+### Prerequisites
 // TODO
 
 ## Example usage
@@ -44,7 +45,15 @@ to recognize the image in question and get the corresponding text.
 
 ## Application
 
-// TODO
+I have included a sample application if one wishes to test out the OCR capabilities.
+
+First build the Xcode project included in this repository. This will generate an application through wish you can take a screenshot, as shown in the following gif.
+
+![Screenshot example](./demo_images/demo.gif)
+
+In the Xcode log you will find the corresponding text Tesseract detected for this screenshot.
+
+![Output text](./demo_images/output_text.png)
 
 ## Libraries used
 

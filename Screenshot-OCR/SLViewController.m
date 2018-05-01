@@ -18,7 +18,6 @@
 
 @implementation SLViewController
 
-
 SLTesseract *ocr;
 
 
