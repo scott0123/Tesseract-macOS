@@ -44,7 +44,7 @@ void (^localCompletionBlock)(NSImage* image);
     ss_lr = NSMakePoint(0, 0);
     localCompletionBlock = nil;
     
-    CreateEventTap();
+    CreateEventTapSS();
     
     return self;
 }
@@ -269,9 +269,9 @@ void (^localCompletionBlock)(NSImage* image);
             NSRect searchRect = NSMakeRect(ss_ul.x, screen_height - ss_lr.y, ss_lr.x-ss_ul.x, ss_lr.y-ss_ul.y);
             searchRect = NSMakeRect(0, 0, screen_width, screen_height);
             self.invisibleWindow = [[NSWindow alloc]initWithContentRect:searchRect
-                                                      styleMask:NSWindowStyleMaskBorderless
-                                                        backing:NSBackingStoreBuffered
-                                                          defer:NO];
+                                                              styleMask:NSWindowStyleMaskBorderless
+                                                                backing:NSBackingStoreBuffered
+                                                                  defer:NO];
             NSColor* transBlue = [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0.0];
             self.invisibleWindow.backgroundColor = transBlue;
             [self.invisibleWindow setOpaque:NO];
@@ -345,11 +345,11 @@ void (^localCompletionBlock)(NSImage* image);
         if([[NSApplication sharedApplication] windows][0] == nil){
             windowNotNil = false;
         }
-         if(windowNotNil){
-             [self.shapeLayer removeFromSuperlayer];
-             self.shapeLayer = nil;
-             [self.invisibleWindow orderOut:self];
-         }
+        if(windowNotNil){
+            [self.shapeLayer removeFromSuperlayer];
+            self.shapeLayer = nil;
+            [self.invisibleWindow orderOut:self];
+        }
         
         if(localCompletionBlock != nil){
             // we have to wait a tiny tiny bit because the shape-layer and window both take some time to exit
@@ -369,7 +369,7 @@ void (^localCompletionBlock)(NSImage* image);
 }
 
 // ------------------------------ event taps ------------------------------
-void CreateEventTap() {
+void CreateEventTapSS() {
     
     // kCGHIDEventTap = system-wide tap
     // kCGSessionEventTap = session-wide tap
@@ -386,11 +386,11 @@ void CreateEventTap() {
     CGEventMask eventsOfInterestMouseUp = CGEventMaskBit(kCGEventLeftMouseUp);
     
     // create the event tap for mouse moves
-    CFMachPortRef mouseMovedEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseMoved, mouseMovedCallback, nil);
+    CFMachPortRef mouseMovedEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseMoved, mouseMovedCallbackSS, nil);
     // create the event tap for mouse downs
-    CFMachPortRef mouseDownEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseDown, mouseDownCallback, nil);
+    CFMachPortRef mouseDownEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseDown, mouseDownCallbackSS, nil);
     // create the event tap for mouse ups
-    CFMachPortRef mouseUpEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseUp, mouseUpCallback, nil);
+    CFMachPortRef mouseUpEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseUp, mouseUpCallbackSS, nil);
     
     // ---------- YOU WILL HAVE A EXC_BAD_ACCESS FAULT HERE IF APP SANDBOX ISNT OFF ----------
     
@@ -412,13 +412,13 @@ void CreateEventTap() {
     CGEventTapEnable(mouseUpEventTap, true);
 }
 
-CGEventRef mouseMovedCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef mouseMovedCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
     [current_instance mouseMoved];
     return event;
 }
 
-CGEventRef mouseDownCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef mouseDownCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
     int ss_busy = 0;
     if(ss_phase != 0) ss_busy = 1;
@@ -430,7 +430,7 @@ CGEventRef mouseDownCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef
     return event;
 }
 
-CGEventRef mouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef mouseUpCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
     int ss_busy = 0;
     if(ss_phase != 0) ss_busy = 1;
