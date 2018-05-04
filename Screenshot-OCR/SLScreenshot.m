@@ -15,6 +15,13 @@
 @property (nonatomic, strong) NSWindow *invisibleWindow;
 @property (nonatomic, strong) CAShapeLayer *shapeLayer;
 
+@property (assign) CFRunLoopSourceRef ssMouseDownRunLoop;
+@property (assign) CFRunLoopSourceRef ssMouseUpRunLoop;
+@property (assign) CFRunLoopSourceRef ssMouseMovedRunLoop;
+@property (assign) CFMachPortRef ssMouseDownTap;
+@property (assign) CFMachPortRef ssMouseUpTap;
+@property (assign) CFMachPortRef ssMouseMovedTap;
+
 @end
 
 @implementation SLScreenshot
@@ -44,7 +51,7 @@ void (^localCompletionBlock)(NSImage* image);
     ss_lr = NSMakePoint(0, 0);
     localCompletionBlock = nil;
     
-    CreateEventTapSS();
+    [self ssCreateEventTap];
     
     return self;
 }
@@ -250,12 +257,12 @@ void (^localCompletionBlock)(NSImage* image);
     return im;
 }
 
-- (void)mouseDown {
+- (void)ssMouseDown {
     
     // based on ss_phase
     if (ss_phase == 1) {
-        ss_ul = [self getMouseCoordinates];
-        ss_lr = [self getMouseCoordinates];
+        ss_ul = [self ssGetMouseCoordinates];
+        ss_lr = [self ssGetMouseCoordinates];
         ss_phase += 1;
         
         bool windowNotNil = true;
@@ -299,10 +306,10 @@ void (^localCompletionBlock)(NSImage* image);
         }
     }
 }
-- (void)mouseMoved {
+- (void)ssMouseMoved {
     // based on ss_phase
     if (ss_phase == 2) {
-        ss_lr = [self getMouseCoordinates];
+        ss_lr = [self ssGetMouseCoordinates];
         
         bool windowNotNil = true;
         
@@ -332,11 +339,11 @@ void (^localCompletionBlock)(NSImage* image);
         }
     }
 }
-- (void)mouseUp {
+- (void)ssMouseUp {
     
     // based on ss_phase
     if (ss_phase == 2) {
-        ss_lr = [self getMouseCoordinates];
+        ss_lr = [self ssGetMouseCoordinates];
         ss_phase = 0;
         
         bool windowNotNil = true;
@@ -369,7 +376,7 @@ void (^localCompletionBlock)(NSImage* image);
 }
 
 // ------------------------------ event taps ------------------------------
-void CreateEventTapSS() {
+- (void)ssCreateEventTap {
     
     // kCGHIDEventTap = system-wide tap
     // kCGSessionEventTap = session-wide tap
@@ -386,11 +393,15 @@ void CreateEventTapSS() {
     CGEventMask eventsOfInterestMouseUp = CGEventMaskBit(kCGEventLeftMouseUp);
     
     // create the event tap for mouse moves
-    CFMachPortRef mouseMovedEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseMoved, mouseMovedCallbackSS, nil);
+    CFMachPortRef mouseMovedEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseMoved, ssMouseMovedCallback, nil);
     // create the event tap for mouse downs
-    CFMachPortRef mouseDownEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseDown, mouseDownCallbackSS, nil);
+    CFMachPortRef mouseDownEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseDown, ssMouseDownCallback, nil);
     // create the event tap for mouse ups
-    CFMachPortRef mouseUpEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseUp, mouseUpCallbackSS, nil);
+    CFMachPortRef mouseUpEventTap = CGEventTapCreate(tap, place, options, eventsOfInterestMouseUp, ssMouseUpCallback, nil);
+    
+    self.ssMouseUpTap = mouseUpEventTap;
+    self.ssMouseDownTap = mouseDownEventTap;
+    self.ssMouseMovedTap = mouseMovedEventTap;
     
     // ---------- YOU WILL HAVE A EXC_BAD_ACCESS FAULT HERE IF APP SANDBOX ISNT OFF ----------
     
@@ -400,6 +411,10 @@ void CreateEventTapSS() {
     CFRunLoopSourceRef mouseDownRunLoopSourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mouseDownEventTap, 0);
     // create a run loop source ref for mouse downs
     CFRunLoopSourceRef mouseUpRunLoopSourceRef = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mouseUpEventTap, 0);
+    
+    self.ssMouseUpRunLoop = mouseUpRunLoopSourceRef;
+    self.ssMouseDownRunLoop = mouseDownRunLoopSourceRef;
+    self.ssMouseMovedRunLoop = mouseMovedRunLoopSourceRef;
     
     // add to the run loops
     CFRunLoopAddSource(CFRunLoopGetCurrent(), mouseMovedRunLoopSourceRef, kCFRunLoopCommonModes);
@@ -412,30 +427,30 @@ void CreateEventTapSS() {
     CGEventTapEnable(mouseUpEventTap, true);
 }
 
-CGEventRef mouseMovedCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef ssMouseMovedCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
-    [current_instance mouseMoved];
+    [current_instance ssMouseMoved];
     return event;
 }
 
-CGEventRef mouseDownCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef ssMouseDownCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
     int ss_busy = 0;
     if(ss_phase != 0) ss_busy = 1;
     
-    [current_instance mouseDown];
+    [current_instance ssMouseDown];
     
     if(ss_busy == 1) return nil;
     
     return event;
 }
 
-CGEventRef mouseUpCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
+CGEventRef ssMouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
     
     int ss_busy = 0;
     if(ss_phase != 0) ss_busy = 1;
     
-    [current_instance mouseUp];
+    [current_instance ssMouseUp];
     
     if(ss_busy == 1) return nil;
     
@@ -445,9 +460,36 @@ CGEventRef mouseUpCallbackSS(CGEventTapProxy proxy, CGEventType type, CGEventRef
 
 /* This function ensures that (0, 0) is the top left of the screen
  */
-- (NSPoint)getMouseCoordinates {
+- (NSPoint)ssGetMouseCoordinates {
     NSPoint mouseCoordInvertedY = [NSEvent mouseLocation];
     return NSMakePoint(mouseCoordInvertedY.x, screen_height - mouseCoordInvertedY.y);
+}
+
+- (void)dealloc{
+    if(self.ssMouseMovedTap != nil){
+        // Disable the event tap
+        CGEventTapEnable(self.ssMouseUpTap, false);
+        CFRelease(self.ssMouseUpTap);
+    }
+    if(self.ssMouseDownTap != nil){
+        // Disable the event tap
+        CGEventTapEnable(self.ssMouseDownTap, false);
+        CFRelease(self.ssMouseDownTap);
+    }
+    if(self.ssMouseMovedTap != nil){
+        // Disable the event tap
+        CGEventTapEnable(self.ssMouseMovedTap, false);
+        CFRelease(self.ssMouseMovedTap);
+    }
+    if(self.ssMouseMovedRunLoop != nil){
+        CFRelease(self.ssMouseMovedRunLoop);
+    }
+    if(self.ssMouseDownRunLoop != nil){
+        CFRelease(self.ssMouseDownRunLoop);
+    }
+    if(self.ssMouseUpRunLoop != nil){
+        CFRelease(self.ssMouseUpRunLoop);
+    }
 }
 
 @end

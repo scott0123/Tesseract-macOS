@@ -10,7 +10,11 @@
 
 @interface SLScreenshot : NSObject
 
-// easy to use
+// easy to use, heres an example:
+//          SLScreenshot *shooter = [[SLScreenshot alloc] init];
+//          [shooter TakeScreenshot:^(NSImage* ss){
+//              [self.ssImageView setImage:ss];
+//          }];
 - (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock; // returns the screenshot in the completion block
 
 
