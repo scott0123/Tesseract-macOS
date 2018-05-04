@@ -466,7 +466,7 @@ CGEventRef ssMouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef
 }
 
 - (void)dealloc{
-    if(self.ssMouseMovedTap != nil){
+    if(self.ssMouseUpTap != nil){
         // Disable the event tap
         CGEventTapEnable(self.ssMouseUpTap, false);
         CFRelease(self.ssMouseUpTap);
@@ -481,14 +481,14 @@ CGEventRef ssMouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef
         CGEventTapEnable(self.ssMouseMovedTap, false);
         CFRelease(self.ssMouseMovedTap);
     }
-    if(self.ssMouseMovedRunLoop != nil){
-        CFRelease(self.ssMouseMovedRunLoop);
+    if(self.ssMouseUpRunLoop != nil){
+        CFRelease(self.ssMouseUpRunLoop);
     }
     if(self.ssMouseDownRunLoop != nil){
         CFRelease(self.ssMouseDownRunLoop);
     }
-    if(self.ssMouseUpRunLoop != nil){
-        CFRelease(self.ssMouseUpRunLoop);
+    if(self.ssMouseMovedRunLoop != nil){
+        CFRelease(self.ssMouseMovedRunLoop);
     }
 }
 
