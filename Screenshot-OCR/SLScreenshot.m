@@ -258,7 +258,7 @@ void (^localCompletionBlock)(NSImage* image);
 }
 
 - (void)ssMouseDown {
-    
+    printf("MD at phase %d with hash %d\n", ss_phase,self.hash);
     // based on ss_phase
     if (ss_phase == 1) {
         ss_ul = [self ssGetMouseCoordinates];
@@ -341,6 +341,7 @@ void (^localCompletionBlock)(NSImage* image);
 }
 - (void)ssMouseUp {
     
+    printf("MU at phase %d\n", ss_phase);
     // based on ss_phase
     if (ss_phase == 2) {
         ss_lr = [self ssGetMouseCoordinates];

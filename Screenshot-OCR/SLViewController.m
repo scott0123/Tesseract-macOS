@@ -19,11 +19,13 @@
 @implementation SLViewController
 
 SLTesseract *ocr;
-
+SLScreenshot *shooter;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    shooter = [[SLScreenshot alloc] init];
+    ocr = [[SLTesseract alloc] init];
     // Do any additional setup after loading the view.
     
 }
@@ -31,8 +33,6 @@ SLTesseract *ocr;
 
 - (IBAction)ButtonPressed:(NSButton *)sender {
     
-    
-    SLScreenshot *shooter = [[SLScreenshot alloc] init];
     [shooter TakeScreenshot:^(NSImage* ss){
         [self.ssImageView setImage:ss];
         [self imageToText];
@@ -42,9 +42,8 @@ SLTesseract *ocr;
 
 - (void) imageToText {
     
-    SLTesseract *ocr = [[SLTesseract alloc] init];
     ocr.language = @"eng";
-    //ocr.language = @"eng+osrs";
+    ocr.language = @"osrs";
     //ocr.charWhitelist = @"1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
     //ocr.charWhitelist = @"1234567890";
     //ocr.charBlacklist = @"1234567890";
