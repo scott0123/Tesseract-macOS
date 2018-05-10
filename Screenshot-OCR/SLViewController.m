@@ -43,7 +43,6 @@ SLScreenshot *shooter;
 - (void) imageToText {
     
     ocr.language = @"eng";
-    ocr.language = @"osrs";
     //ocr.charWhitelist = @"1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
     //ocr.charWhitelist = @"1234567890";
     //ocr.charBlacklist = @"1234567890";

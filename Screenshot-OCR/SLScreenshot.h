@@ -10,6 +10,13 @@
 
 @interface SLScreenshot : NSObject
 
+// standard init
+- (instancetype)init;
+// alternative init if you dont want event taps (cannot call saveScreenshotFromUpperLeft:(NSPoint)ul ToLowerRight:(NSPoint)lr)
+- (instancetype)initWithoutTaps;
+// in case you need to create event taps after initiallizing without them
+- (void)createEventTaps;
+
 // easy to use, heres an example:
 //          SLScreenshot *shooter = [[SLScreenshot alloc] init];
 //          [shooter TakeScreenshot:^(NSImage* ss){

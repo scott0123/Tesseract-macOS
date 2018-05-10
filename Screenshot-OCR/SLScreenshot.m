@@ -50,12 +50,44 @@ void (^localCompletionBlock)(NSImage* image);
     ss_ul = NSMakePoint(0, 0);
     ss_lr = NSMakePoint(0, 0);
     localCompletionBlock = nil;
+    self.ssMouseMovedRunLoop = nil;
+    self.ssMouseDownRunLoop = nil;
+    self.ssMouseUpRunLoop = nil;
+    self.ssMouseDownTap = nil;
+    self.ssMouseDownTap = nil;
+    self.ssMouseUpTap = nil;
     
     [self ssCreateEventTap];
     
     return self;
 }
 
+- (instancetype)initWithoutTaps{
+    self = [super init];
+    
+    current_instance = self;
+    screen_height = [NSScreen mainScreen].frame.size.height;
+    screen_width = [NSScreen mainScreen].frame.size.width;
+    ss_phase = 0;
+    ss_ul = NSMakePoint(0, 0);
+    ss_lr = NSMakePoint(0, 0);
+    localCompletionBlock = nil;
+    self.ssMouseMovedRunLoop = nil;
+    self.ssMouseDownRunLoop = nil;
+    self.ssMouseUpRunLoop = nil;
+    self.ssMouseDownTap = nil;
+    self.ssMouseDownTap = nil;
+    self.ssMouseUpTap = nil;
+    
+    return self;
+}
+
+- (void)createEventTaps{
+    
+    if(self.ssMouseDownTap == nil && self.ssMouseUpTap == nil && self.ssMouseMovedTap == nil){
+        [self ssCreateEventTap];
+    }
+}
 
 - (void)TakeScreenshot:(void (^)(NSImage* image))completionBlock{
     
@@ -68,8 +100,6 @@ void (^localCompletionBlock)(NSImage* image);
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
     CGImageRef imageRef = CGWindowListCreateImage(imageRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
-    
-    CGImageRelease(imageRef);
     
     NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithCGImage:imageRef];
     
@@ -104,7 +134,6 @@ void (^localCompletionBlock)(NSImage* image);
     CGRect imageRect = CGRectMake(ul.x, ul.y, lr.x - ul.x, lr.y - ul.y);
     
     CGImageRef imageRef = CGWindowListCreateImage(imageRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
-    CGImageRelease(imageRef);
     
     NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithCGImage:imageRef];
     
@@ -258,7 +287,7 @@ void (^localCompletionBlock)(NSImage* image);
 }
 
 - (void)ssMouseDown {
-    printf("MD at phase %d with hash %d\n", ss_phase,self.hash);
+    
     // based on ss_phase
     if (ss_phase == 1) {
         ss_ul = [self ssGetMouseCoordinates];
@@ -273,9 +302,8 @@ void (^localCompletionBlock)(NSImage* image);
         }
         // display the search region in blue
         if(windowNotNil){
-            NSRect searchRect = NSMakeRect(ss_ul.x, screen_height - ss_lr.y, ss_lr.x-ss_ul.x, ss_lr.y-ss_ul.y);
-            searchRect = NSMakeRect(0, 0, screen_width, screen_height);
-            self.invisibleWindow = [[NSWindow alloc]initWithContentRect:searchRect
+            NSRect rect = NSMakeRect(0, 0, screen_width, screen_height);
+            self.invisibleWindow = [[NSWindow alloc]initWithContentRect:rect
                                                               styleMask:NSWindowStyleMaskBorderless
                                                                 backing:NSBackingStoreBuffered
                                                                   defer:NO];
@@ -341,7 +369,6 @@ void (^localCompletionBlock)(NSImage* image);
 }
 - (void)ssMouseUp {
     
-    printf("MU at phase %d\n", ss_phase);
     // based on ss_phase
     if (ss_phase == 2) {
         ss_lr = [self ssGetMouseCoordinates];
@@ -483,12 +510,15 @@ CGEventRef ssMouseUpCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef
         CFRelease(self.ssMouseMovedTap);
     }
     if(self.ssMouseUpRunLoop != nil){
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self.ssMouseUpRunLoop, kCFRunLoopCommonModes);
         CFRelease(self.ssMouseUpRunLoop);
     }
     if(self.ssMouseDownRunLoop != nil){
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self.ssMouseDownRunLoop, kCFRunLoopCommonModes);
         CFRelease(self.ssMouseDownRunLoop);
     }
     if(self.ssMouseMovedRunLoop != nil){
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), self.ssMouseMovedRunLoop, kCFRunLoopCommonModes);
         CFRelease(self.ssMouseMovedRunLoop);
     }
 }
