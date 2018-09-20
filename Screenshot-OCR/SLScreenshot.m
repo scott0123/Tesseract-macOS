@@ -278,11 +278,14 @@ void (^localCompletionBlock)(NSImage* image);
     NSImage *im = [[NSImage alloc] init];
     [im addRepresentation:bitmap];
     
+    // uncomment the following lines to save image to desktop (mostly for debugging purposes)
+    /*
     NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
     NSData *data = [bitmap representationUsingType:NSPNGFileType properties:imageProps];
     NSString *fileName = @"~/Desktop/300dpi.png";
     NSString *filePath = [[fileName stringByExpandingTildeInPath] stringByStandardizingPath];
     [data writeToFile:filePath atomically: YES];
+     */
     return im;
 }
 

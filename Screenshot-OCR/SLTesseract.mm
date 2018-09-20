@@ -63,7 +63,9 @@
     
     // set the image
     [self setEngineImage:image];
-    [self saveThresholdedImage];
+    
+    // uncomment the following line to save image to desktop (mostly for debugging purposes)
+    //[self saveThresholdedImage];
     
     int returnCode = 0;
     // call the recognize function
