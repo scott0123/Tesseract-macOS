@@ -89,6 +89,66 @@
     return text;
 }
 
+- (NSArray*)getClassiferChoicesPerSymbol:(NSImage*)image {
+    // returns a 3D array of all possible choices as interpreted by
+    // Tesseract per symbol/character with corresponding confidence
+    // intervals (0-1)
+    
+    // initialize the tesseract
+    _tesseract->Init(_absoluteDataPath.fileSystemRepresentation, self.language.UTF8String);
+    
+    if(self.charWhitelist != nil){
+        _tesseract->SetVariable("tessedit_char_whitelist", self.charWhitelist.UTF8String);
+    }
+    if(self.charBlacklist != nil){
+        _tesseract->SetVariable("tessedit_char_blacklist", self.charBlacklist.UTF8String);
+    }
+    
+    // set the image
+    [self setEngineImage:image];
+    
+    int returnCode = 0;
+    // call the recognize function
+    // returnCode = _tesseract->Recognize(_monitor); // No longer supporting monitoring
+    returnCode = _tesseract->Recognize(nullptr);
+    
+    if(returnCode != 0) printf("recognition function failed\n");
+    
+    // Result iterator object to be iterated through
+    tesseract::ResultIterator* ri = _tesseract->GetIterator();
+    
+    // Iterator `level`, will go through each recognized symbol
+    tesseract::PageIteratorLevel level = tesseract::RIL_SYMBOL;
+    
+    // Holds array of array of symbols where each symbol has all
+    // possible classifier choices with corresponding CI
+    NSMutableArray *result = [NSMutableArray array];
+    if(ri != 0) {
+        // Holds current array for current symbol and its classifier choices
+        NSMutableArray *symbol_result = [NSMutableArray array];
+        do {
+            const char* symbol = ri->GetUTF8Text(level);
+            if(symbol != 0) {
+                // Iterate through all classifer choices for symbol
+                tesseract::ChoiceIterator ci(*ri);
+                do {
+                    // Array to hold current symbol + CI in iterator
+                    NSMutableArray *character = [NSMutableArray array];
+                    const char* choice = ci.GetUTF8Text();
+                    [character addObject:@(choice)];
+                    [character addObject:@(ci.Confidence()/100)];
+                    [symbol_result addObject:character];
+                } while(ci.Next());
+            }
+            [result addObject:symbol_result];
+            delete[] symbol;
+        } while((ri->Next(level)));
+    }
+    NSArray *resultFinal = [result copy];
+    return resultFinal;
+}
+
+
 
 - (void)setEngineImage:(NSImage *)image {
     
