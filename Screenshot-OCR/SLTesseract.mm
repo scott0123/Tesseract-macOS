@@ -90,6 +90,9 @@
 }
 
 - (NSMutableArray*)getIterator:(NSImage*)image {
+    // returns a 2D array of all possible choices as interpreted by
+    // Tesseract with corresponding confidence intervals
+    
     // initialize the tesseract
     _tesseract->Init(_absoluteDataPath.fileSystemRepresentation, self.language.UTF8String);
     
@@ -111,15 +114,22 @@
     
     if(returnCode != 0) printf("recognition function failed\n");
     
+    // Result iterator object to be iterated through
     tesseract::ResultIterator* ri = _tesseract->GetIterator();
+    
+    // Iterator `level` - can be block, paragraph, textline, or symbol
     tesseract::PageIteratorLevel level = tesseract::RIL_SYMBOL;
+    
+    // Holds array of possible choices with corresponding CI
     NSMutableArray *result = [NSMutableArray array];
     if(ri != 0) {
         do {
             const char* symbol = ri->GetUTF8Text(level);
             if(symbol != 0) {
+                // Iterate through all classifer choices for symbol
                 tesseract::ChoiceIterator ci(*ri);
                 do {
+                    // Array to hold current character + CI in iterator
                     NSMutableArray *character = [NSMutableArray array];
                     const char* choice = ci.GetUTF8Text();
                     [character addObject:@(choice)];
