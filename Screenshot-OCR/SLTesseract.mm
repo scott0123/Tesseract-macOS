@@ -89,6 +89,51 @@
     return text;
 }
 
+- (NSMutableArray*)getIterator:(NSImage*)image {
+    // initialize the tesseract
+    _tesseract->Init(_absoluteDataPath.fileSystemRepresentation, self.language.UTF8String);
+    
+    if(self.charWhitelist != nil){
+        _tesseract->SetVariable("tessedit_char_whitelist", self.charWhitelist.UTF8String);
+    }
+    if(self.charBlacklist != nil){
+        _tesseract->SetVariable("tessedit_char_blacklist", self.charBlacklist.UTF8String);
+    }
+    
+    // set the image
+    [self setEngineImage:image];
+    [self saveThresholdedImage];
+    
+    int returnCode = 0;
+    // call the recognize function
+    // returnCode = _tesseract->Recognize(_monitor); // No longer supporting monitoring
+    returnCode = _tesseract->Recognize(nullptr);
+    
+    if(returnCode != 0) printf("recognition function failed\n");
+    
+    tesseract::ResultIterator* ri = _tesseract->GetIterator();
+    tesseract::PageIteratorLevel level = tesseract::RIL_SYMBOL;
+    NSMutableArray *result = [NSMutableArray array];
+    if(ri != 0) {
+        do {
+            const char* symbol = ri->GetUTF8Text(level);
+            if(symbol != 0) {
+                tesseract::ChoiceIterator ci(*ri);
+                do {
+                    NSMutableArray *character = [NSMutableArray array];
+                    const char* choice = ci.GetUTF8Text();
+                    [character addObject:@(choice)];
+                    [character addObject:@(ci.Confidence())];
+                    [result addObject:character];
+                } while(ci.Next());
+            }
+            delete[] symbol;
+        } while((ri->Next(level)));
+    }
+    return result;
+}
+
+
 
 - (void)setEngineImage:(NSImage *)image {
     

@@ -18,5 +18,6 @@
 
 
 - (NSString*)recognize:(NSImage*)image;
+- (NSMutableArray*)getIterator:(NSImage*)image;
 
 @end
