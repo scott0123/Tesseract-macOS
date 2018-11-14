@@ -16,9 +16,14 @@
 @property (nonatomic, copy) NSString *charBlacklist;
 // @property (nonatomic, assign) NSTimeInterval maximumRecognitionTime; // No longer supporting monitoring
 
-
+#pragma mark Core Functions
+// Core recognition function: returns the closest possible NSString
+// match as interpreted by Tesseract for the given NSImage
 - (NSString*)recognize:(NSImage*)image;
 
+
+
+#pragma mark Optional Functions
 // returns a 3D NSArray of all possible choices as interpreted by
 // Tesseract per symbol with corresponding confidence intervals (0-1)
 //
