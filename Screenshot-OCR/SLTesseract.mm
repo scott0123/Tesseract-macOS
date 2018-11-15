@@ -124,9 +124,9 @@
     // possible classifier choices with corresponding CI
     NSMutableArray *result = [NSMutableArray array];
     if(ri != 0) {
-        // Holds current array for current symbol and its classifier choices
-        NSMutableArray *symbol_result = [NSMutableArray array];
         do {
+            // Holds current array for current symbol and its classifier choices
+            NSMutableArray *symbol_result = [NSMutableArray array];
             const char* symbol = ri->GetUTF8Text(level);
             if(symbol != 0) {
                 // Iterate through all classifer choices for symbol
