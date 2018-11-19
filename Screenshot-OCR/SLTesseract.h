@@ -2,7 +2,7 @@
 //  SLTesseract.h
 //  testOCR
 //
-//  Created by ScottLiu on 4/27/18.
+//  Created by Scott Liu on 4/27/18.
 //  Copyright © 2018 Scott Liu. All rights reserved.
 //
 
