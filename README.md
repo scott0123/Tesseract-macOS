@@ -4,9 +4,11 @@
 [![GitHub stars](https://img.shields.io/github/stars/scott0123/Tesseract-macOS.svg?style=social&label=Stars)](https://github.com/scott0123/Tesseract-macOS)
 
 
-I have searched long and hard on the internet for a macOS based Objective-C wrapper for Tesseract to no avail.
+This is an open-source macOS-based Objective-C wrapper for the OCR library *Tesseract*.
 
-As a result, I have decided to create my own! Please star this repo if you find it helpful. :)
+As far as I know, mine is the only working version ported to macOS.
+
+Star this repo if you find it helpful, fork this repo if you want to experiment with it. :)
 
 ## Demo Application
 
