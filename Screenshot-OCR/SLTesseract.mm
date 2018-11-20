@@ -144,6 +144,7 @@
             delete[] symbol;
         } while((ri->Next(level)));
     }
+    delete ri;
     NSArray *resultFinal = [result copy];
     return resultFinal;
 }

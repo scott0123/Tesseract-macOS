@@ -34,9 +34,9 @@
 // per symbol with corresponding confidence intervals
 //
 // Example return value:
-// [[["A",.96],["O",.84],["D",.72]],
-// [["B",.99],["D",.87]],
-// [["O",.92], ["C",.91],["D",.82],["Q",.72],["@",.65]]]
+// [[["A",0.96],["O",0.84],["D",0.72]],
+// [["B",0.99],["D",0.87]],
+// [["O",0.92], ["C",0.91],["D",0.82],["Q",0.72],["@",0.65]]]
 //
 // Notice on the third symbol ("C"), Tesseract recognizes it as "O"
 // as it has the highest CI but the right answer is "C",
