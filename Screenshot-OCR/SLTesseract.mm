@@ -229,6 +229,7 @@
     CGColorSpaceRelease(colorSpace);
     
     Pix* pix = pixCreate((l_uint32)width, (l_uint32)height, (l_uint32)CGImageGetBitsPerPixel(cg));
+    pixFreeData(pix);
     pixSetData(pix, pixels);
     pixSetYRes(pix, (l_int32)300);
     
