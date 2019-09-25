@@ -72,6 +72,39 @@ NSString *text = [ocr recognize:image];
 
 to recognize the image in question and get the corresponding text.
 
+#### Usage in Swift
+
+This library can be easily imported in a Swift project.
+
+Just replicate all the steps above. 
+
+When adding .h and .mm files you will be prompted by Xcode to add a *Bridging Header* (if don't have one already).
+
+Xcode will generate a file named `yourProject-Bridging-Header.h`
+
+Add this line to the *Bridging Header*:
+
+``` 
+#import "SLTesseract.h" 
+```
+
+Initialize like this:
+
+```
+let ocr = SLTesseract()
+```
+(optional) `ocr.language = "eng"`
+
+(optional) `ocr.charWhitelist = "abcdefghijklmnopqrstuvwxyz"`
+
+(optional) `ocr.charBlacklist = "1234567890"`
+
+finally perform OCR by doing this:
+
+```
+let text = ocr.recognize(image)
+
+```
 
 ## Libraries Used
 
