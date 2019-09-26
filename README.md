@@ -90,4 +90,11 @@ Keep in mind that the main dependency *Tesseract* is distributed under the Apach
 
 ## Contact
 
+Open an issue if you want something fixed.
+
 You may reach me at `Tesseract-macOS@scott-liu.com` to inquire about this project.
+
+## Used by
+
+* [Handwriting-Input-Recognition](https://github.com/chargeflux/Handwriting-Input-Recognition) by [chargeflux](https://github.com/chargeflux)
+
