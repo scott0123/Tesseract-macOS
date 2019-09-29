@@ -34,7 +34,7 @@
     self = [super init];
     _tesseract = new tesseract::TessBaseAPI();
     // _monitor = new ETEXT_DESC(); // No longer supporting monitoring
-    _absoluteDataPath = [[NSBundle mainBundle].bundlePath stringByAppendingString:@"/Contents/Resources/"];
+    _absoluteDataPath = [[NSBundle mainBundle].bundlePath stringByAppendingString:@"/Contents/Resources/tessdata"];
     
     setenv("TESSDATA_PREFIX", _absoluteDataPath.fileSystemRepresentation, 1);
     

@@ -511,7 +511,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = AGPAHW954E;
+				DEVELOPMENT_TEAM = SU397RUF62;
 				INFOPLIST_FILE = "Screenshot-OCR/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
