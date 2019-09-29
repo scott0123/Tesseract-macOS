@@ -103,7 +103,6 @@ finally perform OCR by doing this:
 
 ```
 let text = ocr.recognize(image)
-
 ```
 
 ## Libraries Used
