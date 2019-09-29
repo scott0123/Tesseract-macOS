@@ -6,13 +6,23 @@
 
 This is an open-source macOS-based Objective-C wrapper for the OCR library *Tesseract*.
 
-As far as I know, mine is the only working version ported to macOS.
+You can also use this in Swift, instructions below.
 
-Star this repo if you find it helpful, fork this repo if you want to experiment with it. :)
+Star this repo if you find it helpful; fork if you want to experiment with it. :)
+
+## Overview
+
+The wrapper consists of just the following files
+
+* `SLTesseract.h` (Header file)
+* `SLTesseract.mm` (Implementation file)
+* `tessdata/` (Language files for Tesseract)
+* `lib/` (Compiled dependencies)
+* `include/` (Headers for the dependencies)
 
 ## Demo Application
 
-For those of you who wish to first test out the OCR capabilities, I have created a demo application that lets you do just this.
+For those of you who wish to first test out the OCR capabilities, the included `Screenshot-OCR` is a demo application to showcase this.
 
 First build the Xcode project included in this repository. This will generate an application through wish you can take a screenshot, as shown in the following gif.
 
@@ -38,9 +48,6 @@ In the Xcode log you will find the corresponding text Tesseract detected for thi
 5. Verify that the file `SLTesseract.mm` is added to `Targets > Build Phases > Compile Sources`. Additionally, verify that all the static libraries are also added to `Targets > Build Phases > Link Binary With Libraries`. (This process should be done automatically)
 6. You are now ready to use Tesseract in your macOS project. (See Example Usage for code syntax)
 
-### Dependencies
-
-None so far.
 
 ## Example Usage
 
@@ -99,15 +106,17 @@ let ocr = SLTesseract()
 
 (optional) `ocr.charBlacklist = "1234567890"`
 
-finally perform OCR by doing this:
+Finally perform OCR by doing this:
 
 ```
 let text = ocr.recognize(image)
 ```
 
-## Libraries Used
+## Dependencies
 
-* [Tesseract](https://github.com/tesseract-ocr/tesseract) (v3.05.01)
+The libraries below are all included in the `lib/` directory.
+
+* [Tesseract](https://github.com/tesseract-ocr/tesseract) (v4.1.0)
 * [Leptonica](http://leptonica.org/) (v1.75.3)
 	* LibPNG (v1.6.34)
 	* LibTIFF (v4.0.9)
