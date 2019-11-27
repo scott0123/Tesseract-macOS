@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6697C0B4238E1AAE00F9F3C2 /* SLScreenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6697C0B1238E1AAE00F9F3C2 /* SLScreenshot.m */; };
+		6697C0B5238E1AAE00F9F3C2 /* SLScreenshotOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 6697C0B3238E1AAE00F9F3C2 /* SLScreenshotOverlay.m */; };
 		66BE9DAE2095311E00DA9898 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DAD2095311E00DA9898 /* AppDelegate.m */; };
 		66BE9DB12095311E00DA9898 /* SLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DB02095311E00DA9898 /* SLViewController.m */; };
 		66BE9DB32095311E00DA9898 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66BE9DB22095311E00DA9898 /* Assets.xcassets */; };
 		66BE9DB62095311E00DA9898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66BE9DB42095311E00DA9898 /* Main.storyboard */; };
 		66BE9DB92095311E00DA9898 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DB82095311E00DA9898 /* main.m */; };
-		66BE9DC42095341700DA9898 /* SLScreenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DC02095341700DA9898 /* SLScreenshot.m */; };
 		66BE9DC52095341700DA9898 /* SLTesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DC22095341700DA9898 /* SLTesseract.mm */; };
 		66BE9DC72095343B00DA9898 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 66BE9DC62095343B00DA9898 /* tessdata */; };
 		66BE9E162095344200DA9898 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BE9DC92095344100DA9898 /* libz.a */; };
@@ -24,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6697C0B0238E1AAE00F9F3C2 /* SLScreenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLScreenshot.h; sourceTree = "<group>"; };
+		6697C0B1238E1AAE00F9F3C2 /* SLScreenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLScreenshot.m; sourceTree = "<group>"; };
+		6697C0B2238E1AAE00F9F3C2 /* SLScreenshotOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLScreenshotOverlay.h; sourceTree = "<group>"; };
+		6697C0B3238E1AAE00F9F3C2 /* SLScreenshotOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLScreenshotOverlay.m; sourceTree = "<group>"; };
 		66BE9DA92095311E00DA9898 /* Screenshot-OCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Screenshot-OCR.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		66BE9DAC2095311E00DA9898 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		66BE9DAD2095311E00DA9898 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -34,10 +39,8 @@
 		66BE9DB72095311E00DA9898 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66BE9DB82095311E00DA9898 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		66BE9DBA2095311E00DA9898 /* Screenshot_OCR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Screenshot_OCR.entitlements; sourceTree = "<group>"; };
-		66BE9DC02095341700DA9898 /* SLScreenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLScreenshot.m; sourceTree = "<group>"; };
 		66BE9DC12095341700DA9898 /* SLTesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTesseract.h; sourceTree = "<group>"; };
 		66BE9DC22095341700DA9898 /* SLTesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SLTesseract.mm; sourceTree = "<group>"; };
-		66BE9DC32095341700DA9898 /* SLScreenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLScreenshot.h; sourceTree = "<group>"; };
 		66BE9DC62095343B00DA9898 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = "<group>"; };
 		66BE9DC92095344100DA9898 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libz.a; sourceTree = "<group>"; };
 		66BE9DCA2095344100DA9898 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpng.a; sourceTree = "<group>"; };
@@ -151,10 +154,12 @@
 		66BE9DAB2095311E00DA9898 /* Screenshot-OCR */ = {
 			isa = PBXGroup;
 			children = (
-				66BE9DC32095341700DA9898 /* SLScreenshot.h */,
-				66BE9DC02095341700DA9898 /* SLScreenshot.m */,
 				66BE9DC12095341700DA9898 /* SLTesseract.h */,
 				66BE9DC22095341700DA9898 /* SLTesseract.mm */,
+				6697C0B0238E1AAE00F9F3C2 /* SLScreenshot.h */,
+				6697C0B1238E1AAE00F9F3C2 /* SLScreenshot.m */,
+				6697C0B2238E1AAE00F9F3C2 /* SLScreenshotOverlay.h */,
+				6697C0B3238E1AAE00F9F3C2 /* SLScreenshotOverlay.m */,
 				66BE9DAF2095311E00DA9898 /* SLViewController.h */,
 				66BE9DB02095311E00DA9898 /* SLViewController.m */,
 				66BE9DAC2095311E00DA9898 /* AppDelegate.h */,
@@ -351,10 +356,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				66BE9DB12095311E00DA9898 /* SLViewController.m in Sources */,
+				6697C0B5238E1AAE00F9F3C2 /* SLScreenshotOverlay.m in Sources */,
 				66BE9DC52095341700DA9898 /* SLTesseract.mm in Sources */,
 				66BE9DB92095311E00DA9898 /* main.m in Sources */,
-				66BE9DC42095341700DA9898 /* SLScreenshot.m in Sources */,
 				66BE9DAE2095311E00DA9898 /* AppDelegate.m in Sources */,
+				6697C0B4238E1AAE00F9F3C2 /* SLScreenshot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,7 +517,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = SU397RUF62;
+				DEVELOPMENT_TEAM = AGPAHW954E;
 				INFOPLIST_FILE = "Screenshot-OCR/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
