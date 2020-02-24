@@ -8,7 +8,7 @@ This is an open-source macOS-based Objective-C wrapper for the OCR library *Tess
 
 You can also use this in Swift, instructions below.
 
-Star this repo if you find it helpful; fork if you want to experiment with it. :)
+Fork this repo if you want to experiment with it.
 
 ## Overview
 
