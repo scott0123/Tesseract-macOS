@@ -116,12 +116,17 @@ let text = ocr.recognize(image)
 
 The libraries below are all included in the `lib/` directory.
 
-* [Tesseract](https://github.com/tesseract-ocr/tesseract) (v4.1.0)
-* [Leptonica](http://leptonica.org/) (v1.75.3)
-	* LibPNG (v1.6.34)
-	* LibTIFF (v4.0.9)
-	* LibJPEG (v9c)
+* [Tesseract](https://github.com/tesseract-ocr/tesseract) (v4.1.1)
+* [Leptonica](http://leptonica.org/) (v1.8.0)
+	* LibPNG (v1.6.37)
+	* LibTIFF (v4.1.0)
+	* LibJPEG (v9d)
 	* LibZ (v1.2.11)
+	* LibOpenJPEG (v2.3.1)
+	* LibWebP (v1.1.0)
+	* LibGIF (v5.2.1)
+	
+Additionally `libcurl` is required. To add `libcurl`, select your target in Xcode, select `Build Phases` tab and under `Link Binary With Libraries` phase click on the `+` button and type `libcurl`. Select `libcurl.tbd`.
 
 ## License
 
