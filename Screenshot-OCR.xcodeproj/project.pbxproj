@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		078D4C5F25A86F2300A4D6FD /* libcurl.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D4C5E25A86F2300A4D6FD /* libcurl.tbd */; };
+		078D4C6425A86F6800A4D6FD /* libgif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D4C6125A86F6800A4D6FD /* libgif.a */; };
+		078D4C6525A86F6800A4D6FD /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D4C6225A86F6800A4D6FD /* libwebp.a */; };
+		078D4C6625A86F6800A4D6FD /* libopenjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 078D4C6325A86F6800A4D6FD /* libopenjpeg.a */; };
 		6697C0B4238E1AAE00F9F3C2 /* SLScreenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6697C0B1238E1AAE00F9F3C2 /* SLScreenshot.m */; };
 		6697C0B5238E1AAE00F9F3C2 /* SLScreenshotOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 6697C0B3238E1AAE00F9F3C2 /* SLScreenshotOverlay.m */; };
 		66BE9DAE2095311E00DA9898 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BE9DAD2095311E00DA9898 /* AppDelegate.m */; };
@@ -25,6 +29,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		078D4C5E25A86F2300A4D6FD /* libcurl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcurl.tbd; path = usr/lib/libcurl.tbd; sourceTree = SDKROOT; };
+		078D4C6125A86F6800A4D6FD /* libgif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgif.a; sourceTree = "<group>"; };
+		078D4C6225A86F6800A4D6FD /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
+		078D4C6325A86F6800A4D6FD /* libopenjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopenjpeg.a; sourceTree = "<group>"; };
 		6697C0B0238E1AAE00F9F3C2 /* SLScreenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLScreenshot.h; sourceTree = "<group>"; };
 		6697C0B1238E1AAE00F9F3C2 /* SLScreenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLScreenshot.m; sourceTree = "<group>"; };
 		6697C0B2238E1AAE00F9F3C2 /* SLScreenshotOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLScreenshotOverlay.h; sourceTree = "<group>"; };
@@ -123,9 +131,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				078D4C5F25A86F2300A4D6FD /* libcurl.tbd in Frameworks */,
+				078D4C6625A86F6800A4D6FD /* libopenjpeg.a in Frameworks */,
 				66BE9E162095344200DA9898 /* libz.a in Frameworks */,
+				078D4C6525A86F6800A4D6FD /* libwebp.a in Frameworks */,
 				66BE9E172095344200DA9898 /* libpng.a in Frameworks */,
 				66BE9E1B2095344200DA9898 /* liblept.a in Frameworks */,
+				078D4C6425A86F6800A4D6FD /* libgif.a in Frameworks */,
 				66BE9E192095344200DA9898 /* libtesseract.a in Frameworks */,
 				66BE9E1A2095344200DA9898 /* libjpeg.a in Frameworks */,
 				66BE9E182095344200DA9898 /* libtiff.a in Frameworks */,
@@ -135,11 +147,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		078D4C5D25A86F2300A4D6FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				078D4C5E25A86F2300A4D6FD /* libcurl.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		66BE9DA02095311E00DA9898 = {
 			isa = PBXGroup;
 			children = (
 				66BE9DAB2095311E00DA9898 /* Screenshot-OCR */,
 				66BE9DAA2095311E00DA9898 /* Products */,
+				078D4C5D25A86F2300A4D6FD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,6 +200,9 @@
 		66BE9DC82095344100DA9898 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				078D4C6125A86F6800A4D6FD /* libgif.a */,
+				078D4C6325A86F6800A4D6FD /* libopenjpeg.a */,
+				078D4C6225A86F6800A4D6FD /* libwebp.a */,
 				66BE9DC92095344100DA9898 /* libz.a */,
 				66BE9DCA2095344100DA9898 /* libpng.a */,
 				66BE9DCB2095344100DA9898 /* libtiff.a */,
