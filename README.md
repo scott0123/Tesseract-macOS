@@ -142,5 +142,6 @@ You may reach me at `Tesseract-macOS@scott-liu.com` to inquire about this projec
 
 ## Used by
 
+* [Permute](https://software.charliemonroe.net/permute/) by [Charlie Monroe](https://github.com/charlieMonroe)
 * [Handwriting-Input-Recognition](https://github.com/chargeflux/Handwriting-Input-Recognition) by [chargeflux](https://github.com/chargeflux)
 
